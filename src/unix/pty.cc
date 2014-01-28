@@ -18,9 +18,11 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <signal.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
 
@@ -73,6 +75,7 @@ NAN_METHOD(PtyFork);
 NAN_METHOD(PtyOpen);
 NAN_METHOD(PtyResize);
 NAN_METHOD(PtyGetProc);
+NAN_METHOD(PtyKill);
 
 static int
 pty_execvpe(const char *, char **, char **);
@@ -323,6 +326,33 @@ NAN_METHOD(PtyGetProc) {
 }
 
 /**
+ * PtyKill
+ * Gracefully terminates childrens
+ * pty.process(fd, tty)
+ */
+
+NAN_METHOD(PtyKill) {
+  NanScope();
+
+  if (args.Length() < 1) {
+    return ThrowException(
+      Exception::TypeError(String::New("First argument must be a number"))
+    );
+  }
+
+  Local<Integer> integer = args[0]->ToInteger();
+  int32_t seq = integer->Value();
+  pid_t pid = (pid_t)seq;
+  int status;
+
+  if(waitpid(pid, &status, 0) == pid) {
+  } else {
+    kill(pid, SIGTERM);
+  }
+  NanReturnUndefined();
+}
+
+/**
  * execvpe
  */
 
@@ -545,6 +575,7 @@ init(Handle<Object> target) {
   NODE_SET_METHOD(target, "open", PtyOpen);
   NODE_SET_METHOD(target, "resize", PtyResize);
   NODE_SET_METHOD(target, "process", PtyGetProc);
+  NODE_SET_METHOD(target, "kill", PtyKill);
 }
 
 NODE_MODULE(pty, init)
