@@ -335,9 +335,7 @@ NAN_METHOD(PtyKill) {
   NanScope();
 
   if (args.Length() < 1) {
-    return ThrowException(
-      Exception::TypeError(String::New("First argument must be a number"))
-    );
+    return NanThrowError("First argument must be a number");
   }
 
   Local<Integer> integer = args[0]->ToInteger();
