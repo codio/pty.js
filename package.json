@@ -2,7 +2,8 @@
   "name": "pty.js",
   "description": "Pseudo terminals for node.",
   "author": "Christopher Jeffrey",
-  "version": "0.2.7-1",
+  "version": "0.3.0",
+  "license": "MIT",
   "main": "./index.js",
   "repository": "git://github.com/chjj/pty.js.git",
   "homepage": "https://github.com/chjj/pty.js",
@@ -24,7 +25,7 @@
   ],
   "dependencies": {
     "extend": "~1.2.1",
-    "nan": "^1.8.4"
+    "nan": "2.0.5"
   },
   "devDependencies": {
     "mocha": "~1.17.1"
